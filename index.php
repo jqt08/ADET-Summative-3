@@ -1,20 +1,14 @@
 <?php
 session_start();
-
-// Initialize session variable if not already set
 if (!isset($_SESSION["todoList"])) {
     $_SESSION["todoList"] = new SplStack();
 }
-
-// Function to append task data to the session list
 function appendData($task, $dueDate, $dueTime, $list)
 {
     $dueDateTime = $dueDate . ' ' . $dueTime;
     $list->push(["task" => $task, "dueDateTime" => $dueDateTime]);
     return $list;
 }
-
-// Function to delete a task from the session list
 function deleteData($toDelete, $list)
 {
     $tempList = new SplStack();
@@ -26,22 +20,16 @@ function deleteData($toDelete, $list)
     }
     return $tempList;
 }
-
-// Handling form submission
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (!empty($_POST["task"]) && !empty($_POST["due_date"]) && !empty($_POST["due_time"])) {
         $task = $_POST["task"];
         $dueDate = $_POST["due_date"];
         $dueTime = $_POST["due_time"];
-
-        // Append task to session list
         $_SESSION["todoList"] = appendData($task, $dueDate, $dueTime, $_SESSION["todoList"]);
     } else {
         echo '<script>alert("Error: Task, Due Date, and Due Time are required fields.")</script>';
     }
 }
-
-// Handling task deletion
 if (isset($_GET['task'])) {
     $_SESSION["todoList"] = deleteData($_GET['task'], $_SESSION["todoList"]);
 }
@@ -150,9 +138,8 @@ if (isset($_GET['task'])) {
             </div>
         </div>
     </div>
-
+    
     <script>
-        // Real-time clock in Manila, Philippines timezone
         function updateClock() {
             var now = new Date();
             var options = { timeZone: 'Asia/Manila', hour: 'numeric', minute: 'numeric', second: 'numeric' };
@@ -160,10 +147,7 @@ if (isset($_GET['task'])) {
             document.getElementById('clock').textContent = formattedTime;
         }
 
-        // Update clock every second
         setInterval(updateClock, 1000);
-
-        // Initial call to display clock immediately
         updateClock();
     </script>
 </body>
